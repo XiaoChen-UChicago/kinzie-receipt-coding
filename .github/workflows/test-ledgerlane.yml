@@ -1,0 +1,27 @@
+name: Test LedgerLane backend
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'commercial/**'
+      - '.github/workflows/test-ledgerlane.yml'
+  pull_request:
+    paths:
+      - 'commercial/**'
+      - '.github/workflows/test-ledgerlane.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install -r commercial/requirements.txt
+      - run: python -m pytest commercial/tests/ -q
+      - name: Compile Python source
+        run: python -m compileall -q commercial
