@@ -24,9 +24,9 @@ Small field-service and operations teams manually translate emailed or photograp
 
 ## What works today
 
-The public site is a **static interactive case-study dashboard and CSV-output explorer**. It does not ingest private customer receipts on a server. The new private-beta backend is built locally and packaged separately pending a secure deployment and a full source-code push.
+The public site is a **static interactive case-study dashboard and CSV-output explorer**. It does not ingest private customer receipts on a server. The new private-beta backend is built and tested locally, with explicit correction/re-evaluation history and offline pilot scoring; the full source is supplied in a separate source ZIP pending a secure deployment and a full source-code push.
 
-The project test suite currently passes **33/33** local regression and product tests. That is an engineering test result, not evidence of financial compliance, operational accuracy for real clients, or security certification.
+The project test suite currently passes **36/36** local regression and product tests. That is an engineering test result, not evidence of financial compliance, operational accuracy for real clients, or security certification.
 
 ## Open development work
 
