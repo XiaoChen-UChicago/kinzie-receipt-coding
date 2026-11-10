@@ -1,41 +1,64 @@
-# LedgerLane · Receipt Intelligence
+# LedgerLane — Expense Intelligence
 
-**A configurable, human-first receipt coding workflow for field-service teams.**
+**A configurable, human-first receipt coding and review platform for field-service teams.**
 
-[**View the live portfolio demo**](https://xiaochen-uchicago.github.io/kinzie-receipt-coding/)
+[**Open the interactive website**](https://xiaochen-uchicago.github.io/kinzie-receipt-coding/)
 
-## The problem
+## Overview
 
-Small field-service and operations teams manually translate emailed or photographed receipts into job numbers, cost categories, billable status, and accounting exports. A wrong job or code can create downstream billing problems. Our product direction is to automate **verifiable** classifications and route exceptions to a human rather than guessing.
+LedgerLane is a Python/FastAPI **private-beta prototype** that checks line-item receipts against a company's explicitly configured jobs, card owners, vendor aliases, cost codes and approval thresholds.
 
-## Two codebases, intentionally separate
+The public website is a portfolio-style **product preview and local CSV explorer**. It does not connect to the backend or collect customer data. The backend provides its own review workspace at `/` when run locally.
 
-**1. Original academic engine — Kinzie PRD v3.** A fictional University of Chicago case study, with 12 explicit decision rules, 30 reference cases and a 60-receipt day-one log. The original engine and immutable golden files are preserved.
+## Product functionality
 
-**2. LedgerLane private-beta engine (v0.2).** A new configurable Python/FastAPI product prototype that supports isolated customer workspaces, validated CSV imports, company-specific item codes, verified job/card mappings, a review inbox, evidence, reviewer notes, audit history and safe CSV export. A production rollout must not treat this prototype as validated financial software.
+- Workspace-specific policies and isolated API credentials.
+- CSV import with itemized receipt grouping and validation.
+- Deterministic decisions: `coded`, `needs_review`, `sent_back`.
+- Review inbox with supporting evidence and recorded reviewer notes.
+- Explicit correction/re-evaluation with revision history.
+- Workspace audit history and safe CSV export.
+- No automatic accounting, messaging or payments.
 
-### Product safety philosophy
+## Explore the source
 
-- Never guess unknown jobs or cost codes.
-- Match card holders and job identifiers against the company's configured reference tables.
-- Check amounts with decimal-cents precision.
-- Flag duplicate receipts, personal items, and over-limit expenses for review.
-- Never send texts, write into accounting systems, or mark an uncertain expense as coded merely because it was reviewed.
+- [Configurable decision engine](commercial/engine.py)
+- [FastAPI backend](commercial/app.py)
+- [Review workspace interface](commercial/static/index.html)
+- [Backend test suite](commercial/tests/test_engine.py)
+- [Security & pilot limitations](commercial/SECURITY.md)
+- [Mock receipt input example](commercial/example_receipts.csv)
+- [Deployment example](render.yaml)
 
-## What works today
+## Run locally
 
-The public site is a **static interactive case-study dashboard and CSV-output explorer**. It does not ingest private customer receipts on a server. The new private-beta backend is built and tested locally, with explicit correction/re-evaluation history and offline pilot scoring; the full source is supplied in a separate source ZIP pending a secure deployment and a full source-code push.
+Requires Python 3.11+.
 
-The project test suite currently passes **36/36** local regression and product tests. That is an engineering test result, not evidence of financial compliance, operational accuracy for real clients, or security certification.
+```bash
+python -m pip install -r commercial/requirements.txt
+export KINZIE_API_KEY="$(python -c 'import secrets;print(secrets.token_urlsafe(40))')"
+export KINZIE_DB="./local-receipts.sqlite3"
+uvicorn commercial.app:APP --host 127.0.0.1 --port 8000
+```
 
-## Open development work
+Visit http://127.0.0.1:8000 or, in development, http://127.0.0.1:8000/docs. Create a workspace with `POST /api/workspaces` using the administrator key. The response provides a separate one-time workspace key, which is required in the review workspace UI. **Never enter the administrator key into that UI.**
 
-- Integrate the private-beta backend source into this GitHub repository without uploading real customer information.
-- Secure application hosting, managed database, secret storage, identity and access management, backup/restore.
-- Real customer discovery and chart-of-accounts onboarding.
-- Human correction workflow, approval routing, accounting integration and real-world pilot validation.
-- Security, privacy and legal review before any customer financial data is processed.
+```bash
+python -m pytest commercial/tests/ -q
+```
 
-The brand name **LedgerLane** is provisional; no trademark clearance has been performed.
+## Origin: Kinzie coursework
 
-University of Chicago · AI Agent Management project · fictional case study.
+LedgerLane evolved from the University of Chicago AI Agent Management team's **fictional Kinzie Field Services** case. The original course-specific engine passed 30/30 Door 3 verdict checks and was subsequently tested on a 60-receipt fictional day-one log.
+
+The new generic product is **separate from** that course-specific ruleset; those historical scores are not production accuracy claims. Local product development ran 36/36 tests on the complete development checkout. GitHub Actions independently tests the files presently checked into this repository.
+
+## Current deployment status
+
+- **GitHub Pages**: public product overview and fictional CSV review demonstration, live.
+- **FastAPI backend**: source checked in and runnable locally, but **not yet deployed as a secure multi-tenant service**.
+- **Real customer use**: not approved. SQLite, shared workspace API keys, and development deployment settings are insufficient for storing real financial records.
+
+A cloud pilot needs managed storage and backups, user-level identity with MFA, granular access control, encryption, retention rules, rate limits, security testing and a supervised customer validation process. Refer to [SECURITY.md](commercial/SECURITY.md).
+
+*LedgerLane is a provisional product name; no trademark or regulatory clearance has been performed.*
