@@ -1,11 +1,8 @@
-name: Deploy Kinzie website to GitHub Pages
+name: Deploy Kinzie dashboard
 
 on:
   push:
     branches: [main]
-    paths:
-      - 'index.html'
-      - '.github/workflows/deploy-pages.yml'
   workflow_dispatch:
 
 permissions:
@@ -19,21 +16,23 @@ concurrency:
 
 jobs:
   deploy:
+    runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
-      - name: Set up Pages
+      - name: Set up GitHub Pages
         uses: actions/configure-pages@v5
-        with:
-          enablement: true
-      - name: Package site
+      - name: Prepare public site only
+        run: |
+          mkdir -p _site
+          cp index.html _site/index.html
+      - name: Upload site
         uses: actions/upload-pages-artifact@v3
         with:
-          path: .
-      - name: Deploy to GitHub Pages
+          path: _site
+      - name: Deploy to Pages
         id: deployment
         uses: actions/deploy-pages@v4
