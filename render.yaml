@@ -1,0 +1,17 @@
+# Developer preview only. Production requires a persistent managed database,
+# stronger identity controls and security review. No real customer data.
+services:
+  - type: web
+    name: ledgerlane-preview
+    runtime: python
+    rootDir: .
+    buildCommand: pip install -r commercial/requirements.txt
+    startCommand: uvicorn commercial.app:APP --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: KINZIE_ENV
+        value: production
+      - key: KINZIE_API_KEY
+        generateValue: true
+      - key: KINZIE_DB
+        value: /tmp/ledgerlane-preview.sqlite3
