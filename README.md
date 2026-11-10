@@ -1,30 +1,41 @@
-# Kinzie Receipt Coding Agent — Interactive Web Demo
+# LedgerLane · Receipt Intelligence
 
-**University of Chicago · AI Agent Management · Table 6**
+**A configurable, human-first receipt coding workflow for field-service teams.**
 
-> This is a fictional course project. Kinzie Field Services and named employees are fictional.
+[**View the live portfolio demo**](https://xiaochen-uchicago.github.io/kinzie-receipt-coding/)
 
-A PRD v3 receipt-coding rules engine. It assigns one of three verdicts: `coded`, `ask Tom`, or `sent back`. It never submits an external form, texts a technician, or guesses an uncertain job.
+## The problem
 
-## Web showcase
+Small field-service and operations teams manually translate emailed or photographed receipts into job numbers, cost categories, billable status, and accounting exports. A wrong job or code can create downstream billing problems. Our product direction is to automate **verifiable** classifications and route exceptions to a human rather than guessing.
 
-[Open interactive web demo](https://xiaochen-uchicago.github.io/kinzie-receipt-coding/)
+## Two codebases, intentionally separate
 
-The website is a **client-side showcase and CSV review tool**. It does not run the Python backend on GitHub Pages. Upload an output CSV from the Python engine to explore and filter it without submitting information to a server.
+**1. Original academic engine — Kinzie PRD v3.** A fictional University of Chicago case study, with 12 explicit decision rules, 30 reference cases and a 60-receipt day-one log. The original engine and immutable golden files are preserved.
 
-**Test findings:** 30/30 official verdicts on Door 3; rebuilt PRD v3 result 30/30 on the team's full-answer assessment. Day-one log: 60 receipts (5 coded, 52 ask Tom, 3 sent back), including 49 requiring OPEN 1 human resolution. These scores are from the project test set and are not production validation.
+**2. LedgerLane private-beta engine (v0.2).** A new configurable Python/FastAPI product prototype that supports isolated customer workspaces, validated CSV imports, company-specific item codes, verified job/card mappings, a review inbox, evidence, reviewer notes, audit history and safe CSV export. A production rollout must not treat this prototype as validated financial software.
 
-## Python engine and full sources
+### Product safety philosophy
 
-The original complete repository, including `AGENTS.md`, `docs/prd_v3.md`, `receipt_agent/`, `agent/`, `tests/`, `outputs/`, and the full interactive site, is available as a repository ZIP supplied with the project. Upload/extract the full source tree to this repository to make the code and all test artifacts browsable in GitHub.
+- Never guess unknown jobs or cost codes.
+- Match card holders and job identifiers against the company's configured reference tables.
+- Check amounts with decimal-cents precision.
+- Flag duplicate receipts, personal items, and over-limit expenses for review.
+- Never send texts, write into accounting systems, or mark an uncertain expense as coded merely because it was reviewed.
 
-## Deployment
+## What works today
 
-Enable GitHub Pages from **Settings → Pages → Deploy from a branch → main / (root)**. The root `index.html` is the web demo. If Pages settings are disabled, enable them before the public website URL will work.
+The public site is a **static interactive case-study dashboard and CSV-output explorer**. It does not ingest private customer receipts on a server. The new private-beta backend is built locally and packaged separately pending a secure deployment and a full source-code push.
 
-## Design and limitations
+The project test suite currently passes **33/33** local regression and product tests. That is an engineering test result, not evidence of financial compliance, operational accuracy for real clients, or security certification.
 
-- Rules come from PRD v3 only.
-- No rule may silently resolve OPEN 1–7.
-- No external form submission or messaging.
-- No arbitrary choice between two equally plausible job numbers.
+## Open development work
+
+- Integrate the private-beta backend source into this GitHub repository without uploading real customer information.
+- Secure application hosting, managed database, secret storage, identity and access management, backup/restore.
+- Real customer discovery and chart-of-accounts onboarding.
+- Human correction workflow, approval routing, accounting integration and real-world pilot validation.
+- Security, privacy and legal review before any customer financial data is processed.
+
+The brand name **LedgerLane** is provisional; no trademark clearance has been performed.
+
+University of Chicago · AI Agent Management project · fictional case study.
