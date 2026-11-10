@@ -1,0 +1,2 @@
+receipt_id,date,vendor,technician,card_last4,job_number,description,amount,tax,total
+DEMO-1,2026-11-10,Example Supply,Alex Morgan,1234,J-100,safety gloves,18.00,1.80,19.80
