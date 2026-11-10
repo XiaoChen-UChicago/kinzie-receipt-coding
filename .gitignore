@@ -1,0 +1,9 @@
+__pycache__/
+.pytest_cache/
+*.pyc
+.env
+*.sqlite3
+*.db
+.coverage
+venv/
+.venv/
